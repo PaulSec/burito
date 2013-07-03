@@ -33,13 +33,7 @@ def send_http_request(h, url, header, is_get_request=True, data=None):
         # realize POST request
         header['Content-type'] = 'application/x-www-form-urlencoded'
 
-        request_completed = 0
-        while request_completed == 0:
-            try:
-                resp, response = h.request(url, "POST", headers=header, body=urlencode(data))
-                request_completed = 1
-            except:
-                continue
+        resp, response = h.request(url, "POST", headers=header, body=urlencode(data))
 
     return resp, response
 
