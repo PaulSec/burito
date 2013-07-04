@@ -15,7 +15,9 @@ from LogHelper import *
 
 THREADS_LIST = []
 
-#stop thread function
+# stop thread function
+
+
 def stop_threads():
     GlobalVars.cond_tab_empty.acquire()
     GlobalVars.cond_tab_empty.notify()
@@ -42,7 +44,6 @@ def launch_threads():
         i = i + 1
 
 
-
 def wait_during_processing():
 
     while (not GlobalVars.FLAG_PASS_FOUND):
@@ -51,15 +52,15 @@ def wait_during_processing():
             break
 
     # this solution will be after some code fixing in Python 2.7
-    
+
     # GlobalVars.cond_pass_not_found.acquire()
     # GlobalVars.cond_pass_not_found.wait()
     # GlobalVars.cond_pass_not_found.release()
 
 
-################################################################
-########### MAIN PROGRAM
-################################################################
+#
+# MAIN PROGRAM
+#
 parser = optparse.OptionParser()
 create_option_parser(parser)
 
@@ -84,8 +85,7 @@ else:
     # Verify params given by the user
     check_valid_parameters()
 
-
-    #print args
+    # print args
     write_to_file(str(opts))
 
     try:
@@ -98,14 +98,16 @@ else:
         # if Ctrl-C occured, then stop all threads
         stop_threads()
 
-     #waiting for all threads to finish
+     # waiting for all threads to finish
     for curThread in THREADS_LIST:
         curThread.join()
 
     # execution time
-    write_to_file("Execution in : " + str(time.time() - startTime) + "seconds.")
+    write_to_file("Execution in : " + str(
+        time.time() - startTime) + "seconds.")
     # number password tested
-    write_to_file("Number of passwords tested : " + str(GlobalVars.NB_PASSWORD_TESTED))
+    write_to_file("Number of passwords tested : " +
+                  str(GlobalVars.NB_PASSWORD_TESTED))
 
     # if pass found
     if (GlobalVars.FLAG_PASS_FOUND):
@@ -114,5 +116,6 @@ else:
     else:
         # pass not found
         write_to_file("Pass not found.")
-        write_to_file("Last password tested : " + GlobalVars.LAST_PASSWORD_TESTED_MIN)
+        write_to_file(
+            "Last password tested : " + GlobalVars.LAST_PASSWORD_TESTED_MIN)
         sys.exit(1)

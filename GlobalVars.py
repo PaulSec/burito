@@ -18,15 +18,15 @@ class GlobalVars(object):
     # number of passwords tested
     NB_PASSWORD_TESTED = 0
 
-    ################################################################
-    ########### FLAGS
-    ################################################################
+    #
+    # FLAGS
+    #
     FLAG_PASS_FOUND = False
     FLAG_NO_MORE_PROCESSING = False
 
-    ############
-    ### Options
-    ############
+    #
+    # Options
+    #
     options = None
 
     # mandatories args

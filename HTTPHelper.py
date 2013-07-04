@@ -5,9 +5,11 @@ from urllib import urlencode
 # developped for Burito
 from GlobalVars import *
 
-################################################################
-########### FUNCTIONS
-################################################################
+#
+# FUNCTIONS
+#
+
+
 def create_header(cookie=""):
     header = {}
 
@@ -19,11 +21,12 @@ def create_header(cookie=""):
 
     return header
 
-def send_http_request(h, url, header, is_get_request=True, data=None): 
-	# set the referer to the target url
+
+def send_http_request(h, url, header, is_get_request=True, data=None):
+        # set the referer to the target url
     header['Referer'] = url
 
-	# do the HTTP request
+        # do the HTTP request
     if (is_get_request):
         # realize GET request
         if (data is not None):
@@ -33,7 +36,8 @@ def send_http_request(h, url, header, is_get_request=True, data=None):
         # realize POST request
         header['Content-type'] = 'application/x-www-form-urlencoded'
 
-        resp, response = h.request(url, "POST", headers=header, body=urlencode(data))
+        resp, response = h.request(
+            url, "POST", headers=header, body=urlencode(data))
 
     return resp, response
 
@@ -43,16 +47,18 @@ def get_action_form():
     h = httplib2.Http(disable_ssl_certificate_validation=True)
     # send a request to get the html body
 
-    if (GlobalVars.opts.post_params is not None): 
+    if (GlobalVars.opts.post_params is not None):
         # POST param to access the form
         data = {}
         for arg in GlobalVars.opts.post_params.split('&'):
             tmp = arg.split('=')
             data[tmp[0]] = tmp[1]
 
-        resp, response = send_http_request(h, GlobalVars.opts.url, create_header(), False, data)
+        resp, response = send_http_request(
+            h, GlobalVars.opts.url, create_header(), False, data)
     else:
-        resp, response = send_http_request(h, GlobalVars.opts.url, create_header(), True, None)
+        resp, response = send_http_request(
+            h, GlobalVars.opts.url, create_header(), True, None)
 
     soup = BeautifulSoup(''.join(response))
 
@@ -74,15 +80,16 @@ def get_action_form():
             # there's only one result
             determine_HTTP_method(form[0])
             GlobalVars.opts.indice_form_page = 0
-            GlobalVars.opts.action_form = generate_action_form(form[0]['action'])
+            GlobalVars.opts.action_form = generate_action_form(
+                form[0]['action'])
 
 
 # generate selectors to get the form
 def generate_selectors():
-    ###########################################
-    ##### Selector priority :
-    ##### id > name > action
-    ###########################################
+    #
+    # Selector priority :
+    # id > name > action
+    #
 
     GlobalVars.opts.selectors = {}
     # check if there's an id which has been set
@@ -93,7 +100,8 @@ def generate_selectors():
             GlobalVars.opts.selectors['name'] = GlobalVars.opts.form_name
         else:
             if (GlobalVars.opts.form_action is not None):
-                GlobalVars.opts.selectors['action'] = GlobalVars.opts.form_action
+                GlobalVars.opts.selectors[
+                    'action'] = GlobalVars.opts.form_action
 
 
 # iterate on all forms if after findAll (with selectors), len > 1
@@ -110,7 +118,8 @@ def iterate_on_all_forms(form):
         res = raw_input(form[i]['action'] + " ? [Y/n] ")
         if (res == "Y"):
             GlobalVars.opts.indice_form_page = i
-            GlobalVars.opts.action_form = generate_action_form(form[i]['action'])
+            GlobalVars.opts.action_form = generate_action_form(
+                form[i]['action'])
             notFound = True
 
             # determine what kind of HTTP Request it is

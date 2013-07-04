@@ -9,12 +9,14 @@ from LogHelper import *
 from GlobalVars import *
 from HTTPHelper import *
 
-################################################################
-########### CLASS ParameterCheckerThread
-################################################################
+#
+# CLASS ParameterCheckerThread
+#
+
+
 class ParameterCheckerThread(threading.Thread):
 
-    # init 
+    # init
     def __init__(self):
         threading.Thread.__init__(self)
         self.running = True
@@ -30,7 +32,7 @@ class ParameterCheckerThread(threading.Thread):
 
             # gathering the data
             data = self.gathering_data()
-            #insert the parameter to crack
+            # insert the parameter to crack
             data[GlobalVars.opts.param_to_crack] = password
 
             write_to_file("Trying password " + password)
@@ -45,7 +47,8 @@ class ParameterCheckerThread(threading.Thread):
     # send HTTP Request method
     def send_HTTP_Request(self, url, isGETRequest=False, data=None):
 
-        resp, response = send_http_request(self.h, url, create_header(self.cookie), isGETRequest, data)
+        resp, response = send_http_request(
+            self.h, url, create_header(self.cookie), isGETRequest, data)
 
         return resp, response
 
@@ -93,7 +96,7 @@ class ParameterCheckerThread(threading.Thread):
 
             GlobalVars.lock_access_tab.release()
 
-            # we do not really need the lock because 
+            # we do not really need the lock because
             # we only check a "potential" value of the tab
             if (len(GlobalVars.TAB_PASSWORDS) < 50):
                 GlobalVars.cond_tab_empty.acquire()
@@ -101,7 +104,7 @@ class ParameterCheckerThread(threading.Thread):
                 GlobalVars.cond_tab_empty.release()
                 # print "j'ai reveille le tab filler"
 
-            self.stop_if_no_more_values(password)        
+            self.stop_if_no_more_values(password)
 
         return password
 
@@ -120,7 +123,6 @@ class ParameterCheckerThread(threading.Thread):
         GlobalVars.TAB_PASSWORDS.append(password)
         GlobalVars.lock_last_password_tested.release()
 
-
     def gathering_data(self):
         # add the data to the request
         data = GlobalVars.opts.args.copy()
@@ -138,19 +140,20 @@ class ParameterCheckerThread(threading.Thread):
 
         return data
 
-
     def send_data(self, password, data):
         try:
             if (GlobalVars.opts.method_form == "POST"):
-                resp, response = self.send_HTTP_Request(GlobalVars.opts.action_form, False, data)
+                resp, response = self.send_HTTP_Request(
+                    GlobalVars.opts.action_form, False, data)
             else:
-                resp, response = self.send_HTTP_Request(GlobalVars.opts.action_form, True, data)
+                resp, response = self.send_HTTP_Request(
+                    GlobalVars.opts.action_form, True, data)
 
             if (int(resp['status']) == 200):  # ok status code
 
-                ##################################################
-                ####### Found password ?
-                ##################################################
+                #
+                # Found password ?
+                #
                 if (GlobalVars.opts.message_failed not in response):
                     write_to_file("[*] Found Password : " + password)
                     GlobalVars.FOUND_PASSWORD = password

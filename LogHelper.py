@@ -1,6 +1,8 @@
 from GlobalVars import *
 
 # function to log output
+
+
 def write_to_file(string):
     if (GlobalVars.opts.LOG_FILE is not None):
         GlobalVars.lock_access_file.acquire()

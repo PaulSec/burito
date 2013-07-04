@@ -5,9 +5,11 @@ import sys
 from GlobalVars import *
 from LogHelper import *
 
-################################################################
-########### CLASS FillTabThread
-################################################################
+#
+# CLASS FillTabThread
+#
+
+
 class FillTabThread(threading.Thread):
 
     # init method
@@ -29,7 +31,6 @@ class FillTabThread(threading.Thread):
 
     def stop(self):
         self.running = False
-
 
     # method for bruteforce attack
     def bruteforce(self):
@@ -56,15 +57,14 @@ class FillTabThread(threading.Thread):
     # waitForLimit method
     def waitForLimit(self):
 
-        if ((not GlobalVars.FLAG_PASS_FOUND) 
-            and (self.running is True) 
-            and (len(GlobalVars.TAB_PASSWORDS) > 200)):
+        if ((not GlobalVars.FLAG_PASS_FOUND)
+            and (self.running is True)
+                and (len(GlobalVars.TAB_PASSWORDS) > 200)):
             GlobalVars.cond_tab_empty.acquire()
             # print "[++++] Je m'endors"
             GlobalVars.cond_tab_empty.wait()
             # print "Tab Filler reveille"
             GlobalVars.cond_tab_empty.release()
-
 
     # recurse method
     def recurse(self, width, position, baseString):
@@ -74,10 +74,11 @@ class FillTabThread(threading.Thread):
             i = self.get_character_index(width, position)
 
             while i < len(GlobalVars.opts.charset):
-            #for char in GlobalVars.opts.charset:
+            # for char in GlobalVars.opts.charset:
                 if (GlobalVars.FLAG_PASS_FOUND is False and self.running is True):
                     if (position < width):
-                        self.recurse(width, position + 1, baseString + "%c" % GlobalVars.opts.charset[i])
+                        self.recurse(
+                            width, position + 1, baseString + "%c" % GlobalVars.opts.charset[i])
                     else:
                         self.add_word_or_exit(i, position, baseString)
                 else:
@@ -88,19 +89,19 @@ class FillTabThread(threading.Thread):
             sys.exit(0)
 
     # add work to the tab or exit
-    def add_word_or_exit(self, i, position, baseString): 
+    def add_word_or_exit(self, i, position, baseString):
         if (position <= GlobalVars.opts.max):
             # acquire the lock to append a new element
             self.waitForLimit()
 
             GlobalVars.lock_access_tab.acquire()
-            GlobalVars.TAB_PASSWORDS.append(baseString + "%c" % GlobalVars.opts.charset[i])
+            GlobalVars.TAB_PASSWORDS.append(
+                baseString + "%c" % GlobalVars.opts.charset[i])
             GlobalVars.lock_access_tab.release()
         else:
             # then whe try now new values > len(MAX_PASS)
             GlobalVars.FLAG_NO_MORE_PROCESSING = True
             sys.exit(0)
-
 
     def get_character_index(self, width, position):
         if(GlobalVars.opts.resume is not None and width == GlobalVars.opts.min):
@@ -108,7 +109,7 @@ class FillTabThread(threading.Thread):
             try:
                 return GlobalVars.opts.charset.index(char)
             except:
-                raise Exception('Password resume contains character not included in the charset !\n, kill process !')
+                raise Exception(
+                    'Password resume contains character not included in the charset !\n, kill process !')
         else:
             return 0
-
