@@ -6,12 +6,12 @@ import optparse
 import string
 
 # developed for burito
-from ParameterCheckerThread import *
-from TabFillerThread import *
-from GlobalVars import *
-from HTTPHelper import *
-from OptionsValidator import *
-from LogHelper import *
+from classes.ParameterCheckerThread import *
+from classes.TabFillerThread import *
+from classes.GlobalVars import *
+from classes.HTTPHelper import *
+from classes.OptionsValidator import *
+from classes.LogHelper import *
 
 THREADS_LIST = []
 
